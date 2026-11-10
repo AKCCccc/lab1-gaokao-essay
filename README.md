@@ -66,7 +66,7 @@
 ### 2. 安装依赖
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/AKCCccc/lab1-gaokao-essay.git
 cd lab1-gaokao-essay
 
 python -m venv .venv
@@ -317,3 +317,4 @@ python scripts/make_screenshots.py
 - 班级：网安243
 - 姓名：付小娅
 - 学号：202401050876
+- GitHub 仓库：<https://github.com/AKCCccc/lab1-gaokao-essay>
