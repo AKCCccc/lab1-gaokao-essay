@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="基于 FastAPI 与提示工程的高考满分作文智能生成应用" />
+  <title>文心 · 高考满分作文智能工坊</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="paper-glow" aria-hidden="true"></div>
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="返回首页">
+      <span class="brand-mark">文</span>
+      <span class="brand-text">
+        <strong>文心</strong>
+        <small>高考满分作文智能工坊</small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="主导航">
+      <a href="#workspace">写作台</a>
+      <a href="#guide">方法</a>
+      <a href="#about">关于</a>
+    </nav>
+
+    <div class="student-card" title="实验一课程作业">
+      <span class="student-kicker">实验一 · 课程作业</span>
+      <strong>网安243 · 付小娅</strong>
+      <span>学号 202401050876</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">PROMPT ENGINEERING · GAOKAO ESSAY</p>
+        <h1>让每一次落笔，<br /><em>都有章法可循。</em></h1>
+        <p class="hero-desc">
+          两阶段提示工程：先审题立纲，再依纲成文。对齐新高考评分标准，
+          让结构、素材与文采，都有迹可循。
+        </p>
+        <div class="hero-tags">
+          <span>审题立意</span>
+          <span>评分标准对齐</span>
+          <span>辩证思维</span>
+          <span>流式生成</span>
+        </div>
+      </div>
+
+      <div class="hero-stats" aria-label="能力概览">
+        <div class="stat">
+          <strong>60</strong>
+          <span>分制评分标准</span>
+        </div>
+        <div class="stat">
+          <strong>6</strong>
+          <span>维写作约束</span>
+        </div>
+        <div class="stat">
+          <strong>3</strong>
+          <span>步生成流程</span>
+        </div>
+        <div class="seal" aria-hidden="true">满分<br />作文</div>
+      </div>
+    </section>
+
+    <section id="workspace" class="workspace">
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <span class="step-no">01</span>
+          <div>
+            <h2>设定题目</h2>
+            <p>把题目交给 AI，剩下的交给章法。</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="title">作文题目 <span class="required">*</span></label>
+          <textarea id="title" rows="2" maxlength="200"
+            placeholder="例如：本手、妙手、俗手"></textarea>
+          <div class="chips" id="titleChips" aria-label="示例题目"></div>
+        </div>
+
+        <div class="field">
+          <label for="material">材料 / 写作要求</label>
+          <textarea id="material" rows="4" maxlength="4000"
+            placeholder="粘贴题目材料、漫画说明或写作任务。留空也可直接依据题目写作。"></textarea>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="genre">文体</label>
+            <select id="genre">
+              <option value="议论文">议论文</option>
+              <option value="记叙文">记叙文</option>
+              <option value="散文">议论性散文</option>
+              <option value="书信">书信体</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="wordCount">目标字数</label>
+            <select id="wordCount">
+              <option value="800">800 字</option>
+              <option value="900">900 字</option>
+              <option value="1000">1000 字</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="style">风格目标</label>
+            <select id="style">
+              <option value="满分冲刺">满分冲刺</option>
+              <option value="稳健高分">稳健高分</option>
+              <option value="思辨深刻">思辨深刻</option>
+              <option value="文采斐然">文采斐然</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="mode">生成模式</label>
+            <select id="mode">
+              <option value="standard">标准</option>
+              <option value="fast">快速</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="extra">附加要求</label>
+          <textarea id="extra" rows="2" maxlength="1000"
+            placeholder="例如：适当引用古诗文；结合青年视角；避免使用常见素材"></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="outlineBtn" class="btn btn-ghost" type="button">生成写作大纲</button>
+          <button id="generateBtn" class="btn btn-primary" type="button">
+            <span id="generateLabel">生成满分作文</span>
+            <kbd>Ctrl ↵</kbd>
+          </button>
+        </div>
+        <p class="hint" id="modeHint">标准模式会先审题立纲，再依据大纲成文，质量更稳定。</p>
+
+        <div class="history-head">
+          <h3>最近生成</h3>
+          <button id="clearHistory" class="link-btn" type="button">清空</button>
+        </div>
+        <ul id="historyList" class="history-list">
+          <li class="history-empty">还没有历史记录，生成后会保存在本机。</li>
+        </ul>
+      </div>
+
+      <div class="panel output-panel">
+        <div class="output-head">
+          <div class="tabs" role="tablist" aria-label="输出内容切换">
+            <button class="tab active" data-tab="essay" role="tab" aria-selected="true">作文正文</button>
+            <button class="tab" data-tab="outline" role="tab" aria-selected="false">写作大纲</button>
+            <button class="tab" data-tab="review" role="tab" aria-selected="false">AI 阅卷</button>
+          </div>
+          <div class="output-tools">
+            <span id="wordBadge" class="badge">0 字</span>
+            <button id="reviewBtn" class="icon-btn" type="button" title="让 AI 按评分标准点评">AI 阅卷</button>
+            <button id="copyBtn" class="icon-btn" type="button" title="复制当前内容">复制</button>
+            <button id="downloadBtn" class="icon-btn" type="button" title="下载为新文本文件">下载</button>
+          </div>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          <div class="ink-circle">文</div>
+          <h3>好文章，从审题开始</h3>
+          <p>输入题目，点击「生成满分作文」。<br />AI 会先立骨架，再填血肉。</p>
+          <div class="flow">
+            <div><span>1</span>审题立纲</div>
+            <i></i>
+            <div><span>2</span>依纲成文</div>
+            <i></i>
+            <div><span>3</span>按标自检</div>
+          </div>
+        </div>
+
+        <article id="essayView" class="prose hidden" aria-live="polite"></article>
+        <pre id="outlineView" class="outline hidden"></pre>
+        <pre id="reviewView" class="review hidden"></pre>
+
+        <div id="statusBar" class="status-bar hidden" role="status">
+          <span class="status-dot"></span>
+          <span id="statusText">正在生成…</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="guide" class="guide">
+      <div class="section-title">
+        <p class="eyebrow">HOW IT WORKS</p>
+        <h2>三步，写出一类文</h2>
+        <p>把阅卷老师的经验，拆成模型可以执行的步骤。</p>
+      </div>
+      <div class="guide-grid">
+        <article class="guide-card">
+          <span class="guide-no">01</span>
+          <h3>审题立纲</h3>
+          <p>先提炼材料关键词与核心矛盾，确定立意、标题与三个递进分论点，避免下笔千言、离题万里。</p>
+          <small>关键词提取 · 立意校准 · 结构设计</small>
+        </article>
+        <article class="guide-card">
+          <span class="guide-no">02</span>
+          <h3>依纲成文</h3>
+          <p>把大纲、评分标准、文体规范与风格锚点一起交给模型，让每一段都有任务，每一个例子都服务于论点。</p>
+          <small>材料鲜活 · 论证分层 · 语言有文采</small>
+        </article>
+        <article class="guide-card">
+          <span class="guide-no">03</span>
+          <h3>按标自检</h3>
+          <p>生成后可按新高考评分标准让 AI 阅卷，给出分项得分、亮点、提升建议与升格示范，形成写作闭环。</p>
+          <small>内容 · 表达 · 发展等级</small>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div class="about-copy">
+        <p class="eyebrow">ABOUT THIS PROJECT</p>
+        <h2>关于本应用</h2>
+        <p>
+          「文心」是《生成式人工智能》课程实验一的作品：以 FastAPI 搭建后端，
+          通过 OpenAI SDK 调用 DeepSeek 大模型，用提示工程控制考场作文的立意、
+          结构与语言，前端采用原生 HTML / CSS / JavaScript。
+        </p>
+        <dl class="meta">
+          <div><dt>课程</dt><dd>生成式人工智能 · 实验一</dd></div>
+          <div><dt>班级</dt><dd>网安243</dd></div>
+          <div><dt>姓名</dt><dd>付小娅</dd></div>
+          <div><dt>学号</dt><dd>202401050876</dd></div>
+        </dl>
+      </div>
+      <div class="tech-stack">
+        <span>FastAPI</span>
+        <span>OpenAI SDK</span>
+        <span>DeepSeek</span>
+        <span>SSE 流式输出</span>
+        <span>Prompt Engineering</span>
+        <span>Vanilla JS</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>文心 · 高考满分作文智能工坊　|　生成内容仅供学习参考，请勿直接用于考试。</p>
+    <p>网安243 付小娅 · 202401050876</p>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
