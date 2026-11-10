@@ -7,4 +7,5 @@ __pycache__/
 screenshots/*.tmp.png
 .pytest_cache/
 node_modules/
+.idea/
 screenshots/_server.log
